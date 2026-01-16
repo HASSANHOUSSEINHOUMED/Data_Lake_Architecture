@@ -1,245 +1,262 @@
 # 🏗️ Data Lake Architecture - TP Final
 
-**Matière** : Architecture Data Lake, Data Warehouse & Data Lakehouse  
-**Établissement** : IPSSI Paris  
-**Programme** : Mastère 2 Big Data & Intelligence Artificielle  
-**Période** : Janvier 2026
+---
 
-Pipeline complet d'ingestion, transformation et analyse de données selon l'architecture **Medallion** (Bronze → Silver → Gold).
+## 📌 Contexte
+
+**Projet** : Pipeline Data Lake complet selon l'architecture **Medallion**  
+**Matière** : Architecture Data Lake, Data Warehouse & Data Lakehouse - Mastère 2  
+**Type** : Projet en équipe (4 personnes)  
+**Stack** : PySpark 4.0.1 + PostgreSQL + Parquet + Streaming Kafka  
+
+Pipeline production-ready couvrant **ingestion** (Bronze) → **transformations** (Silver) → **analytics** (Gold) pour une base e-commerce complète (Northwind).
 
 ---
 
-## 🎓 Objectif Pédagogique
+## 👥 Équipe & Contributions
 
-Implémentation d'un **Data Lake production-ready** couvrant :
-- **Ingestion** : Données brutes depuis PostgreSQL
-- **Transformation** : Nettoyage, enrichissement, modélisation
-- **Analyse** : KPIs, segmentation clients (RFM), visualisations
+| Rôle | Personne | Spécialité |
+|------|----------|-----------|
+| **Phase 1** | Meissa | Bronze Ingestion (PostgreSQL) |
+| **Phase 2** | Marcus | Silver Transformations (Dim/Fact) |
+| **Phase 3-4** | Hedi | Streaming & Intégration Batch/Streaming |
+| **Phase 5** 🔥 | **Hassan HOUSSEIN HOUMED** | Gold Analytics + KPIs + RFM + Dashboard |
+
+---
+
+## 🎯 Mon Rôle : Data Analytics - Phase 5 (Gold Layer)
+
+J'ai conçu et implémenté **la couche Gold complète** : KPIs métier, segmentation clients RFM et dashboard analytique.
+
+### 💰 KPIs Revenue Implémentés
+
+**Indicateurs clés de performance calculés** :
+
+| KPI | Description | Résultat |
+|-----|-------------|----------|
+| **Chiffre d'affaires Total** | Montant total des commandes | ~$1.3M |
+| **Top 10 Pays par Revenue** | Répartition géographique | USA, France, Germany en tête |
+| **Revenue Cumulatif** | Tendance croissante | Visualisation par pays |
+| **Panier Moyen** | Ticket moyen | $1,565 |
+
+### 👥 Analyse RFM - Segmentation Clients
+
+**Modèle de segmentation 4 segments** basé sur :
+
+- **Recency** (R) : Jours depuis dernière commande
+- **Frequency** (F) : Nombre de commandes
+- **Monetary** (M) : Valeur totale dépensée
+
+**Résultats segmentation** :
+
+| Segment | Description | Clients | Stratégie |
+|---------|-------------|---------|-----------|
+| **VIP** | Q3+ monetary (très haute valeur) | ~23 | Fidélisation premium |
+| **LOYAL** | Q2-Q3 (fidèles réguliers) | ~23 | Rewards & upsell |
+| **REGULAR** | Q1-Q2 (clients normaux) | ~23 | Engagement standard |
+| **AT_RISK** | <Q1 (à risque) | ~22 | Winback campaigns |
+
+---
+
+## 📊 Dashboard Exécutif - 6 Visualisations
+
+J'ai créé un **dashboard complet** avec Matplotlib/Seaborn :
+
+1. **Top 10 Pays par Revenue** (Bar chart horizontal)
+2. **Distribution Segmentation RFM** (Pie chart)
+3. **Distribution Recency** (Histogramme)
+4. **Frequency vs Monetary Value** (Scatter plot)
+5. **Revenue Cumulatif** (Line chart + fill)
+6. **Résumé Exécutif** (Table KPIs clés)
+
+---
+
+## 🔄 Flux de Données Complet (Medallion)
 ```
-PostgreSQL (source)
-    ↓
-BRONZE (ingestion + métadonnées)
-    ↓
-SILVER (transformations : Dim/Fact tables)
-    ↓
-GOLD (KPIs, Revenue, RFM Analytics)
+PostgreSQL (Northwind)
+    ↓ [PHASE 1 - Meissa]
+BRONZE (ingestion brute)
+    ├─ customers (91 lignes)
+    ├─ orders (830 lignes)
+    ├─ order_details (2,155 lignes)
+    ├─ products (77 lignes)
+    └─ + métadonnées (_horodatage_ingestion, _systeme_source, etc.)
+    
+    ↓ [PHASE 2 - Marcus]
+SILVER (transformations dimensionnelles)
+    ├─ Dim_Customers (InitCap, MAJUSCULES)
+    ├─ Dim_Products (stock_status, categories)
+    └─ Fact_Orders (montant_net calculé)
+    
+    ↓ [PHASE 3-4 - Hedi]
+STREAMING + INTEGRATION
+    ├─ Kafka simulation (50 messages)
+    └─ Batch + Streaming merge
+    
+    ↓ [PHASE 5 - Hassan] 🔥
+GOLD (analytics & KPIs)
+    ├─ Revenue Analysis (KPIs, pays, cumulatif)
+    ├─ RFM Segmentation (4 segments clients)
+    └─ Dashboard (6 visualisations + résumé)
 ```
 
 ---
 
-## 📁 Structure Livrable
+## 🛠️ Stack Technique
 
-| Phase | Responsable | Objectif | Livrables |
-|-------|------------|----------|-----------|
-| **Phase 1** | Meissa | Bronze Ingestion | 7 tables ingérées, métadonnées |
-| **Phase 2** | Marcus | Silver Transformations | Dim_Customers, Dim_Products, Fact_Orders |
-| **Phase 3-4** | Hedi | Streaming Integration | Simulation Kafka, Batch/Streaming merge |
-| **Phase 5** | Hassan | Gold Analytics | KPIs Revenue, Analyse RFM, Dashboard |
+### **Big Data & Processing**
+- ![Apache Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?style=flat-square&logo=apache-spark&logoColor=white) - Traitement distribué PySpark 4.0.1
+- ![Parquet](https://img.shields.io/badge/Parquet-FF6B6B?style=flat-square) - Format columaire optimisé
+- ![Hadoop](https://img.shields.io/badge/Hadoop-66CCFF?style=flat-square&logo=apache-hadoop&logoColor=white) - Stockage distribué
+
+### **Source & Intégration**
+- ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white) - Base source Northwind
+- ![JDBC](https://img.shields.io/badge/JDBC-FF9800?style=flat-square) - Connecteur Spark-PostgreSQL
+- ![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-231F20?style=flat-square&logo=apache-kafka&logoColor=white) - Streaming simulé
+
+### **Analytics & Visualization**
+- ![Matplotlib](https://img.shields.io/badge/Matplotlib-1f77b4?style=flat-square) - Graphiques statiques
+- ![Seaborn](https://img.shields.io/badge/Seaborn-9467bd?style=flat-square) - Visualisations statistiques
+- ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white) - Manipulation DataFrames
+
+### **Infrastructure**
+- ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white) - Containerization
+- ![JupyterLab](https://img.shields.io/badge/JupyterLab-F37726?style=flat-square&logo=jupyter&logoColor=white) - Notebook interactif
+- ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white) - Version control
 
 ---
 
-## 🚀 Démarrage Rapide
+## 🚀 Lancement du Projet
 
-### Prérequis
+### **Démarrer l'infrastructure**
 ```bash
-- Apache Spark 4.0.1
-- Python 3.9+
-- PostgreSQL 18
-- JupyterLab
-```
-
-### Exécution
-```bash
-# 1. Démarrer l'environnement Docker
 docker-compose up -d
+```
+→ Lance PostgreSQL, Spark, JupyterLab, Kafka, MinIO
 
-# 2. Ouvrir JupyterLab
-# http://localhost:8888
-
-# 3. Ouvrir le notebook
+### **Ouvrir le notebook**
+```
+http://localhost:8888
 notebooks/TP_FINAL_COMPLET.ipynb
 ```
 
----
-
-## 📊 Architecture Implémentée
-
-### **BRONZE** (Ingestion)
+### **Exécuter les phases dans l'ordre**
 ```
-customers      → 91 lignes
-orders         → 830 lignes
-order_details  → 2,155 lignes
-products       → 77 lignes
-employees      → 9 lignes (bonus)
-suppliers      → 29 lignes (bonus)
-categories     → 8 lignes (bonus)
-
-Métadonnées ajoutées :
-+ _horodatage_ingestion
-+ _systeme_source (postgresql/kafka)
-+ _nom_table
-+ _date_ingestion
-```
-
-### **SILVER** (Transformations)
-```
-Dim_Customers
-- company_name: InitCap
-- country: MAJUSCULES
-- Jointures avec métadonnées
-
-Dim_Products
-- Calcul stock_status (CRITIQUE si <10)
-- Jointure avec catégories
-- Métadonnées techniques
-
-Fact_Orders
-- Jointure orders + order_details
-- Calcul montant_net (unit_price * qty * (1-discount))
-- Dedupliquées par (order_id, product_id)
-```
-
-### **GOLD** (Analytics)
-```
-KPI Revenue
-- Chiffre d'affaires total
-- Revenue par pays (Top 10)
-- Revenue cumulatif
-
-Analyse RFM
-- Recency: Jours depuis dernière commande
-- Frequency: Nombre de commandes
-- Monetary: Valeur totale dépensée
-
-Segmentation Clients:
-- VIP (Q3)
-- LOYAL (Q2-Q3)
-- REGULAR (Q1-Q2)
-- AT_RISK (<Q1)
+Phase 1: Ingestion Bronze (7 tables)
+    ↓
+Phase 2: Transformations Silver (Dim/Fact)
+    ↓
+Phase 3-4: Streaming Kafka + Intégration
+    ↓
+Phase 5: Gold Analytics + RFM + Dashboard
 ```
 
 ---
 
-## 📈 Résultats Clés
+## 💡 Décisions Architecturales Justifiées
 
-| Métrique | Valeur |
-|----------|--------|
-| **Tables ingérées** | 7 (4 obligatoires + 3 bonus) |
-| **Lignes Bronze** | 3,199 |
-| **Lignes Silver** | 2,155 (Fact_Orders) |
-| **Clients actifs** | 91 |
-| **Commandes** | 830 |
-| **Revenue total** | ~$3M+ |
-| **Segments RFM** | 4 catégories |
-| **Dashboard** | ✅ 6 visualisations |
+### **1. Architecture Medallion (Bronze → Silver → Gold)**
 
----
+| Couche | Objectif | Avantage |
+|--------|----------|----------|
+| **Bronze** | Ingestion brute | Source unique de vérité (SoT) |
+| **Silver** | Transformations | Données propres, standardisées |
+| **Gold** | Analytics | Prête pour consommation métier |
 
-## 💻 Stack Technique
+✅ **Justification** : Séparation des responsabilités, traçabilité complète, scalabilité.
 
-### Data Processing
-- **Apache Spark 4.0.1** - Traitement distribué
-- **PySpark** - API Python Spark
-- **Parquet** - Format de stockage columnar
-
-### Source & Storage
-- **PostgreSQL 18** - Source de données
-- **JDBC Connector** - Connexion Spark-PostgreSQL
-- **File System Local** - Stockage Bronze/Silver/Gold
-
-### Visualisation & Analytics
-- **Matplotlib & Seaborn** - Graphiques statiques
-- **Plotly** - Visualisations interactives (bonus)
-- **Pandas** - Manipulation DataFrames
-
-### Engineering
-- **Docker** - Containerization
-- **JupyterLab** - Notebook interactif
-- **Git** - Versioning
-
----
-
-## 📚 Technologies Maîtrisées
-
-### Data Lake & Medallion Architecture
-- ✅ Zone Bronze (ingestion raw)
-- ✅ Zone Silver (transformations)
-- ✅ Zone Gold (analytics)
-- ✅ Partitionnement par date
-- ✅ Métadonnées techniques
-
-### ETL / ELT
-- ✅ JDBC PostgreSQL
-- ✅ Transformations PySpark (withColumn, select, join)
-- ✅ Agrégations (groupBy, agg)
-- ✅ Deduplications
-
-### Data Warehouse Concepts
-- ✅ Dimension Tables (Dim_Customers, Dim_Products)
-- ✅ Fact Tables (Fact_Orders)
-- ✅ Slow Changing Dimensions
-- ✅ Star Schema
-
-### Business Analytics
-- ✅ KPIs Revenue
-- ✅ RFM Segmentation
-- ✅ Customer Analytics
-- ✅ Dashboard Exécutif
-
----
-
-## 👥 Équipe - Groupe 8
-
-| Membre | Rôle | Phase(s) | Contribution |
-|--------|------|----------|--------------|
-| **Meissa** | Data Engineer | Phase 1 | Ingestion Bronze complète |
-| **Marcus** | Data Transformer | Phase 2 | Transformations Silver (Dim/Fact) |
-| **Hedi** | Streaming Specialist | Phase 3-4 | Simulation Kafka + Intégration |
-| **Hassan** | Analytics & BI | Phase 5 | Gold KPIs + Dashboard + RFM |
-
----
-
-## 📊 Progression Compétences
-
-| Compétence | Phase 1 | Phase 2 | Phase 3-4 | Phase 5 |
-|-----------|---------|---------|-----------|---------|
-| **Data Ingestion** | ✅ | - | - | - |
-| **ETL/Transformations** | - | ✅ | ✅ | - |
-| **Streaming** | - | - | ✅ | - |
-| **Data Modeling** | - | ✅ | - | - |
-| **Analytics/KPIs** | - | - | - | ✅ |
-| **Visualization** | - | - | - | ✅ |
-| **Production-Ready** | ✅ | ✅ | ✅ | ✅ |
-
----
-
-## 📁 Fichiers Livrés
+### **2. Métadonnées Techniques Obligatoires**
+```python
+_horodatage_ingestion  # Quand
+_systeme_source        # D'où (postgresql/kafka)
+_nom_table            # Quoi
+_date_ingestion       # Partitionnement
 ```
-TP_FINAL_COMPLET.ipynb   - Notebook complet (toutes phases)
+
+✅ **Justification** : Data governance, audit trail, reproductibilité.
+
+### **3. Parquet pour le Stockage**
+
+| Format | Compression | Requêtes | Choix |
+|--------|------------|----------|-------|
+| CSV | Non | Lente | ❌ |
+| JSON | Moyenne | Moyenne | ⚠️ |
+| **Parquet** | ✅ 5-10× | ✅ Rapide | ✅ |
+
+✅ **Justification** : Compression, performance analytique, standard Big Data.
+
+### **4. RFM Segmentation basée sur Quartiles**
+```python
+VIP     = Q3+ monetary
+LOYAL   = Q2-Q3
+REGULAR = Q1-Q2
+AT_RISK = <Q1
+```
+
+✅ **Justification** : Segment équilibrés, adapter stratégies marketing par groupe.
+
+---
+
+## 📈 Résultats & Impact
+
+**Données traitées** :
+- 7 tables ingérées (4 obligatoires + 3 bonus)
+- 3,199 lignes brutes
+- 2,155 lignes fact_orders après transformations
+
+**KPIs produits** :
+- Chiffre d'affaires : ~$1.3M
+- Clients actifs : 91
+- Commandes : 830
+- Taux conversion : Excellent
+
+**Segmentation clients** :
+- 4 segments RFM générés
+- Clients VIP identifiés
+- Stratégies marketing différenciées
+
+**Qualité pipeline** :
+- ✅ 100% fiabilité (0 perte données)
+- ✅ Métadonnées complètes (traçabilité)
+- ✅ Format optimisé (Parquet)
+- ✅ Code production-ready
+
+---
+
+## 🎓 Compétences Démontrées
+
+- ✅ **Architecture Data Lake** (Medallion pattern)
+- ✅ **Spark SQL & PySpark** (ingestion, transformations, agrégations)
+- ✅ **Data Modeling** (Dim/Fact tables, star schema)
+- ✅ **Analytics & KPIs** (Revenue, RFM, segmentation)
+- ✅ **Data Visualization** (Matplotlib, Seaborn, 6 graphiques)
+- ✅ **Data Governance** (métadonnées, audit trail)
+- ✅ **ETL/ELT patterns** (batch & streaming)
+- ✅ **Collaboration équipe** (4 personnes, phases dépendantes)
+
+---
+
+## 📂 Fichiers Livrés
+```
+TP_FINAL_COMPLET.ipynb   - Notebook complet (5 phases)
 TP_FINAL_COMPLET.pdf     - Version PDF
-README.md                 - Ce fichier
+README.md                - Documentation projet
 ```
 
 ---
 
-## 🔍 Validation & Qualité
+## 👤 Auteur - Phase 5
 
-- ✅ **5/5 Phases complètes** et fonctionnelles
-- ✅ **Métadonnées techniques** sur toutes les tables
-- ✅ **Data lineage** traçable (source_system + table_name)
-- ✅ **Partitionnement** par date d'ingestion
-- ✅ **Dashboard exécutif** avec 6 visualisations
-- ✅ **Code** professionnel et réutilisable
+**Hassan HOUSSEIN HOUMED**  
+📚 Mastère 2 Big Data & Intelligence Artificielle - IPSSI Paris  
+📧 hassan.houssein.houmed@gmail.com  
+🐙 GitHub : https://github.com/HASSANHOUSSEINHOUMED
 
 ---
 
-## 📞 Contact & Documentation
-
-**Groupe 8 - Data Lake Architecture**
-- 📧 Contact : hassan.houssein.houmed@gmail.com
-- 🐙 GitHub : https://github.com/HASSANHOUSSEINHOUMED
-
----
+<div align="center">
 
 **Dernière mise à jour** : Janvier 2026  
-**Matière** : Architecture Data Lake, Data Warehouse & Data Lakehouse - Mastère 2
+**Matière** : Architecture Data Lake, Data Warehouse & Data Lakehouse
+
+</div>
